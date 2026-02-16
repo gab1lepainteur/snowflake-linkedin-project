@@ -50,7 +50,99 @@ CREATE OR REPLACE FILE FORMAT json_format
 ### Étape 4 : Création des Tables
 Création des structures cibles. Pour les fichiers JSON, une approche ELT a été utilisée : chargement d'abord dans une table temporaire (`_RAW`) avec une colonne `VARIANT`, puis transformation vers la table finale.
 
-*(Voir le script SQL complet pour les DDL de toutes les tables)*
+```sql
+CREATE OR REPLACE TABLE job_postings (
+  job_id NUMBER,
+  company_name VARCHAR,
+  title VARCHAR,
+  description VARCHAR(16777216),
+  max_salary NUMBER(15,2),
+  med_salary NUMBER(15,2),
+  min_salary NUMBER(15,2),
+  pay_period VARCHAR,
+  formatted_work_type VARCHAR,
+  location VARCHAR,
+  applies NUMBER,
+  original_listed_time NUMBER,
+  remote_allowed NUMBER,
+  views NUMBER,
+  job_posting_url VARCHAR,
+  application_url VARCHAR(4096),
+  application_type VARCHAR,
+  expiry NUMBER,
+  closed_time NUMBER,
+  formatted_experience_level VARCHAR,
+  skills_desc VARCHAR(16777216),
+  listed_time NUMBER,
+  posting_domain VARCHAR,
+  sponsored NUMBER,
+  work_type VARCHAR,
+  currency VARCHAR,
+  compensation_type VARCHAR
+);
+
+CREATE OR REPLACE TABLE benefits (
+  job_id NUMBER,
+  inferred BOOLEAN,
+  type VARCHAR
+);
+
+CREATE OR REPLACE TABLE companies_raw (
+  raw_data VARIANT
+);
+
+CREATE OR REPLACE TABLE companies (
+  company_id NUMBER,
+  name VARCHAR,
+  description VARCHAR(16777216),
+  company_size NUMBER,
+  state VARCHAR,
+  country VARCHAR,
+  city VARCHAR,
+  zip_code VARCHAR,
+  address VARCHAR,
+  url VARCHAR
+);
+
+CREATE OR REPLACE TABLE company_industries_raw (
+  raw_data VARIANT
+);
+
+CREATE OR REPLACE TABLE company_industries (
+  company_id NUMBER,
+  industry VARCHAR
+);
+
+CREATE OR REPLACE TABLE company_specialities_raw (
+  raw_data VARIANT
+);
+
+CREATE OR REPLACE TABLE company_specialities (
+  company_id NUMBER,
+  speciality VARCHAR
+);
+
+CREATE OR REPLACE TABLE employee_counts (
+  company_id NUMBER,
+  employee_count NUMBER,
+  follower_count NUMBER,
+  time_recorded NUMBER
+);
+
+CREATE OR REPLACE TABLE job_industries_raw (
+  raw_data VARIANT
+);
+
+CREATE OR REPLACE TABLE job_industries (
+  job_id NUMBER,
+  industry_id NUMBER
+);
+
+CREATE OR REPLACE TABLE job_skills (
+  job_id NUMBER,
+  skill_abr VARCHAR
+);
+
 
 ### Étape 5 & 6 : Chargement et Transformation
 *   **CSV** : Chargement direct via `COPY INTO`.
