@@ -102,5 +102,13 @@ L'application Streamlit permet de visualiser les indicateurs clés. Le code sour
 *   **Description** : Certaines lignes des fichiers CSV pouvaient avoir un nombre de colonnes incohérent ou des caractères mal formés.
 *   **Solution** : Utilisation de `ON_ERROR = 'CONTINUE'` lors des commandes `COPY INTO` pour charger toutes les données valides sans bloquer le processus entier sur quelques erreurs mineures de formatage.
 
+### Problème 4 : Noms d'industries manquants
+*   **Description** : La table `job_industries` ne contient que des IDs d'industries, et aucune table de mapping (ex: `industries.csv`) n'était fournie pour obtenir les noms.
+*   **Solution** : Pour les analyses nécessitant le nom de l'industrie, une jointure a été faite avec la table `company_industries` en passant par la table `companies` (Job -> Company -> Company Industry). Cela suppose que l'industrie de l'offre est celle de l'entreprise, ce qui est une approximation acceptable faute de mieux.
+    ```sql
+    JOIN companies c ON TRY_TO_NUMBER(jp.company_name) = c.company_id
+    JOIN company_industries ci ON c.company_id = ci.company_id
+    ```
+
 ## 4. Commentaires
 Toutes les étapes ont été scriptées pour être reproductibles. L'architecture choisie sépare clairement les données brutes (Stage/Raw tables) des données structurées (Tables finales), facilitant la maintenance et les évolutions futures.
