@@ -123,10 +123,13 @@ CREATE OR REPLACE TABLE job_skills (
 );
 
 -- 5. Chargement des données CSV
-COPY INTO job_postings
+INSERT INTO job_postings
+SELECT
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+  $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
+  $21, $22, $23, $24, $25, $26, $27
 FROM @linkedin_stage/job_postings.csv
-FILE_FORMAT = (FORMAT_NAME = csv_format)
-ON_ERROR = 'CONTINUE';
+(FILE_FORMAT => csv_format);
 
 COPY INTO benefits
 FROM @linkedin_stage/benefits.csv
