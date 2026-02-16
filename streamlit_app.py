@@ -16,24 +16,25 @@ st.header("1. Top 10 des titres de postes les plus publiés par industrie")
 query1 = """
     WITH ranked_jobs AS (
         SELECT
-            ji.industry_id,
+            ci.industry,
             jp.title,
             COUNT(*) AS nb_offres,
-            ROW_NUMBER() OVER (PARTITION BY ji.industry_id ORDER BY COUNT(*) DESC) AS rn
+            ROW_NUMBER() OVER (PARTITION BY ci.industry ORDER BY COUNT(*) DESC) AS rn
         FROM job_postings jp
-        JOIN job_industries ji ON jp.job_id = ji.job_id
-        GROUP BY ji.industry_id, jp.title
+        JOIN companies c ON TRY_TO_NUMBER(jp.company_name) = c.company_id
+        JOIN company_industries ci ON c.company_id = ci.company_id
+        GROUP BY ci.industry, jp.title
     )
-    SELECT industry_id, title, nb_offres
+    SELECT industry, title, nb_offres
     FROM ranked_jobs
     WHERE rn <= 10
-    ORDER BY industry_id, nb_offres DESC
+    ORDER BY industry, nb_offres DESC
 """
 df1 = session.sql(query1).to_pandas()
 
 if not df1.empty:
-    selected_industry = st.selectbox("Choisir une industrie", df1['INDUSTRY_ID'].unique())
-    filtered = df1[df1['INDUSTRY_ID'] == selected_industry]
+    selected_industry = st.selectbox("Choisir une industrie", df1['INDUSTRY'].unique())
+    filtered = df1[df1['INDUSTRY'] == selected_industry]
     st.bar_chart(filtered.set_index('TITLE')['NB_OFFRES'])
 else:
     st.info("Aucune donnée disponible pour l'analyse 1.")
@@ -44,25 +45,26 @@ st.header("2. Top 10 des postes les mieux rémunérés par industrie")
 query2 = """
     WITH ranked_salaries AS (
         SELECT
-            ji.industry_id,
+            ci.industry,
             jp.title,
             jp.max_salary,
             jp.pay_period,
-            ROW_NUMBER() OVER (PARTITION BY ji.industry_id ORDER BY jp.max_salary DESC NULLS LAST) AS rn
+            ROW_NUMBER() OVER (PARTITION BY ci.industry ORDER BY jp.max_salary DESC NULLS LAST) AS rn
         FROM job_postings jp
-        JOIN job_industries ji ON jp.job_id = ji.job_id
+        JOIN companies c ON TRY_TO_NUMBER(jp.company_name) = c.company_id
+        JOIN company_industries ci ON c.company_id = ci.company_id
         WHERE jp.max_salary IS NOT NULL
     )
-    SELECT industry_id, title, max_salary, pay_period
+    SELECT industry, title, max_salary, pay_period
     FROM ranked_salaries
     WHERE rn <= 10
-    ORDER BY industry_id, max_salary DESC
+    ORDER BY industry, max_salary DESC
 """
 df2 = session.sql(query2).to_pandas()
 
 if not df2.empty:
-    selected_industry2 = st.selectbox("Industrie (salaires)", df2['INDUSTRY_ID'].unique(), key='ind2')
-    filtered2 = df2[df2['INDUSTRY_ID'] == selected_industry2]
+    selected_industry2 = st.selectbox("Industrie (salaires)", df2['INDUSTRY'].unique(), key='ind2')
+    filtered2 = df2[df2['INDUSTRY'] == selected_industry2]
     st.bar_chart(filtered2.set_index('TITLE')['MAX_SALARY'])
 else:
     st.info("Aucune donnée disponible pour l'analyse 2.")
@@ -100,16 +102,18 @@ else:
 st.header("4. Répartition des offres par secteur d'activité")
 
 query4 = """
-    SELECT ji.industry_id, COUNT(*) AS nb_offres
-    FROM job_industries ji
-    GROUP BY ji.industry_id
+    SELECT ci.industry, COUNT(*) AS nb_offres
+    FROM job_postings jp
+    JOIN companies c ON TRY_TO_NUMBER(jp.company_name) = c.company_id
+    JOIN company_industries ci ON c.company_id = ci.company_id
+    GROUP BY ci.industry
     ORDER BY nb_offres DESC
     LIMIT 20
 """
 df4 = session.sql(query4).to_pandas()
 
 if not df4.empty:
-    st.bar_chart(df4.set_index('INDUSTRY_ID')['NB_OFFRES'])
+    st.bar_chart(df4.set_index('INDUSTRY')['NB_OFFRES'])
 
 # --- Analyse 5 : Répartition par type d'emploi ---
 st.header("5. Répartition des offres par type d'emploi")
