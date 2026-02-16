@@ -1,3 +1,5 @@
+**Participants :** Primael Tchiapo, Nathan Glotin, Enzo Pujol, Gabin Lepainteur, Leuctres Nascimiento
+
 # Projet : Analyse des Offres d'Emploi LinkedIn avec Snowflake
 
 Ce dépôt contient le livrable pour l'évaluation **MBAESG_EVALUATION_ARCHITECTURE_BIGDATA**. Il détaille les étapes de mise en place de l'architecture de données sur Snowflake, le chargement des données, et l'application d'analyse Streamlit.
