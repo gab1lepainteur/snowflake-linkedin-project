@@ -135,4 +135,3 @@ if not df5.empty:
     df5 = df5.sort_values(by='NB_OFFRES', ascending=False)
     st.bar_chart(df5.set_index('FORMATTED_WORK_TYPE')['NB_OFFRES'])
     st.dataframe(df5)
-
