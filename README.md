@@ -142,7 +142,7 @@ CREATE OR REPLACE TABLE job_skills (
   job_id NUMBER,
   skill_abr VARCHAR
 );
-
+```
 
 ### Étape 5 & 6 : Chargement et Transformation
 *   **CSV** : Chargement direct via `COPY INTO`.
