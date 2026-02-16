@@ -34,7 +34,7 @@ df1 = session.sql(query1).to_pandas()
 
 if not df1.empty:
     selected_industry = st.selectbox("Choisir une industrie", df1['INDUSTRY'].unique())
-    filtered = df1[df1['INDUSTRY'] == selected_industry]
+    filtered = df1[df1['INDUSTRY'] == selected_industry].sort_values(by='NB_OFFRES', ascending=False)
     st.bar_chart(filtered.set_index('TITLE')['NB_OFFRES'])
 else:
     st.info("Aucune donnée disponible pour l'analyse 1.")
@@ -64,7 +64,7 @@ df2 = session.sql(query2).to_pandas()
 
 if not df2.empty:
     selected_industry2 = st.selectbox("Industrie (salaires)", df2['INDUSTRY'].unique(), key='ind2')
-    filtered2 = df2[df2['INDUSTRY'] == selected_industry2]
+    filtered2 = df2[df2['INDUSTRY'] == selected_industry2].sort_values(by='MAX_SALARY', ascending=False)
     st.bar_chart(filtered2.set_index('TITLE')['MAX_SALARY'])
 else:
     st.info("Aucune donnée disponible pour l'analyse 2.")
@@ -113,6 +113,7 @@ query4 = """
 df4 = session.sql(query4).to_pandas()
 
 if not df4.empty:
+    df4 = df4.sort_values(by='NB_OFFRES', ascending=False)
     st.bar_chart(df4.set_index('INDUSTRY')['NB_OFFRES'])
 
 # --- Analyse 5 : Répartition par type d'emploi ---
@@ -131,5 +132,6 @@ query5 = """
 df5 = session.sql(query5).to_pandas()
 
 if not df5.empty:
+    df5 = df5.sort_values(by='NB_OFFRES', ascending=False)
     st.bar_chart(df5.set_index('FORMATTED_WORK_TYPE')['NB_OFFRES'])
     st.dataframe(df5)
