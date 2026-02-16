@@ -1,0 +1,33 @@
+# Rapport d'Analyse des Offres d'Emploi LinkedIn
+
+Ce document présente les résultats de l'analyse des offres d'emploi LinkedIn extraites et stockées dans Snowflake.
+
+## 1. Distribution des salaires
+
+![Distribution des salaires](assets/media__1771254914557.png)
+
+Cette visualisation montre la répartition des salaires proposés dans les offres d'emploi.
+
+## 2. Compétences les plus demandées
+
+![Top Skills](assets/media__1771255946776.png)
+
+Ici, nous voyons les compétences (skills) les plus fréquemment mentionnées dans les descriptions de poste.
+
+## 3. Top Entreprises qui recrutent
+
+![Top Companies](assets/media__1771255946777.png)
+
+Ce graphique met en évidence les entreprises ayant publié le plus grand nombre d'offres.
+
+## 4. Localisation des offres
+
+![Locations](assets/media__1771255946780.png)
+
+Répartition géographique des offres d'emploi.
+
+## 5. Tendances par niveau d'expérience
+
+![Experience Level](assets/media__1771255946786.png)
+
+Analyse des offres en fonction du niveau d'expérience requis.
